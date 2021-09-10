@@ -9,6 +9,8 @@ import dev.schoolmanagement.repository.CourseRepository;
 import dev.schoolmanagement.service.CourseService;
 import dev.schoolmanagement.utility.Constants;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +27,10 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class CourseServiceImpl implements CourseService {
+public class InstructorService implements CourseService {
+    @Autowired
     CourseRepository courseRepository;
+    @Autowired
     CourseMapper courseMapper;
 
     /**
@@ -41,7 +45,6 @@ public class CourseServiceImpl implements CourseService {
         else if (courseRepository.existsByCourseCode(course.getCourseCode()) ||courseRepository.existsById(course.getId())) {
             throw new CourseAlreadyExistsException(Constants.COURSE_ALREADY_EXISTS);
         }
-        System.out.println(courseMapper.mapToEntity(course));
         return courseMapper.mapToDTO(courseRepository.save(courseMapper.mapToEntity(course)));
     }
 
