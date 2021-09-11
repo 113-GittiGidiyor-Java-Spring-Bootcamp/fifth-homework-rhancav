@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
     // Handling null fields & parameters
     @ExceptionHandler(NonNullableException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ResponseEntity<ValidationErrorResponse> handleException(NonNullableException exception){
+    public ResponseEntity<ErrorResponse> handleException(NonNullableException exception){
         this.persistErrorLog(exception);
-        return new ResponseEntity<ValidationErrorResponse>(new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_ACCEPTABLE);
     }
 
     // Handle entity not found

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class InstructorService implements CourseService {
+public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseRepository courseRepository;
     @Autowired

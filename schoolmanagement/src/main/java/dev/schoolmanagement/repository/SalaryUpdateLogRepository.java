@@ -1,4 +1,9 @@
 package dev.schoolmanagement.repository;
 
-public interface SalaryUpdateLogRepository extends org.springframework.data.jpa.repository.JpaRepository<dev.schoolmanagement.entity.SalaryUpdateLog, long> {
+import dev.schoolmanagement.entity.SalaryUpdateLog;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SalaryUpdateLogRepository extends JpaRepository<SalaryUpdateLog, Long> {
 }

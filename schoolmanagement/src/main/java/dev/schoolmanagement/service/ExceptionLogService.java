@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Base ExceptionLogService interface for ExceptionLog service layer.
  */
-public interface ExceptionLogService extends LogService {
+public interface ExceptionLogService extends LogService<ExceptionLogDTO> {
     /**
      * Get all the exception logs by their creation date.
      *

@@ -3,9 +3,11 @@ package dev.schoolmanagement.controller;
 import dev.schoolmanagement.DTO.InstructorDTO;
 import dev.schoolmanagement.DTO.PermanentInstructorDTO;
 import dev.schoolmanagement.DTO.VisitingResearcherDTO;
+import dev.schoolmanagement.DTO.request.InstructorSalaryUpdate;
 import dev.schoolmanagement.DTO.response.CreationSuccess;
 import dev.schoolmanagement.DTO.response.DeletionSuccess;
 import dev.schoolmanagement.DTO.response.UpdateSuccess;
+import dev.schoolmanagement.entity.Instructor;
 import dev.schoolmanagement.service.InstructorService;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
@@ -55,5 +57,10 @@ public class InstructorController {
     @PutMapping("/visiting-researcher")
     public ResponseEntity<UpdateSuccess<InstructorDTO>> update(@RequestBody @Valid VisitingResearcherDTO visitingResearcherDTO) {
         return ResponseEntity.ok(new UpdateSuccess<>(instructorService.update(visitingResearcherDTO)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateSuccess<Instructor>> updateSalary(@PathVariable Long id, @RequestBody InstructorSalaryUpdate instructorSalaryUpdate){
+        return ResponseEntity.ok(new UpdateSuccess<>(instructorService.updateSalary(id, instructorSalaryUpdate)));
     }
 }

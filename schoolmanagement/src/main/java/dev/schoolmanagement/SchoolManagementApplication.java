@@ -2,12 +2,14 @@ package dev.schoolmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-public class SchoolmanagementApplication {
+@EnableSwagger2
+public class SchoolManagementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SchoolmanagementApplication.class, args);
+        SpringApplication.run(SchoolManagementApplication.class, args);
     }
 
 }

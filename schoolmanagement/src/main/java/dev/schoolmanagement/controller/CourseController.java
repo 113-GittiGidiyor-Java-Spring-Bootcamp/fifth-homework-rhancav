@@ -44,4 +44,5 @@ public class CourseController {
     public ResponseEntity<UpdateSuccess<CourseDTO>> update(@RequestBody @Valid CourseDTO courseDTO) {
         return ResponseEntity.ok(new UpdateSuccess<>(courseService.update(courseDTO)));
     }
+
 }
