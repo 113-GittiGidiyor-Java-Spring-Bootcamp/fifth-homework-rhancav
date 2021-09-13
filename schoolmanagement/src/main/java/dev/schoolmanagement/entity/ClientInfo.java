@@ -1,9 +1,6 @@
 package dev.schoolmanagement.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.persistence.Embeddable;
@@ -15,6 +12,7 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @SessionScope
 @Embeddable
+@Builder
 public class ClientInfo {
     private String clientIp;
     private String clientURL;

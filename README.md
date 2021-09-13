@@ -18,7 +18,7 @@ $ mvn spring-boot:run
 
 # Details
 The main data model is as shown below:
-[![model-diagram](model-diagram.png)](model-diagram.png)
+[![model-diagram](data-model.png)]
 ## Persistence
 Four basic CRUD operations are available for all the concrete entity classes. They are nicely sampled at [Swagger UI endpoint](http://localhost:8080/swagger-ui.html) and can be tested on the same interface at will.
 The custom response types can be inscpected under DTOr/responses package. Just a syntactic sugar.
