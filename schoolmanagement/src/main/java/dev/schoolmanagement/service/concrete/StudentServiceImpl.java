@@ -12,7 +12,7 @@ import dev.schoolmanagement.repository.CourseRepository;
 import dev.schoolmanagement.repository.StudentRepository;
 import dev.schoolmanagement.service.CourseService;
 import dev.schoolmanagement.service.StudentService;
-import dev.schoolmanagement.utility.Constants;
+import dev.schoolmanagement.utility.ErrorMessages;
 import dev.schoolmanagement.utility.UtilityMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,7 @@ public class StudentServiceImpl implements StudentService {
             throw new NonNullableException("Student cannot be null");
         }
         UtilityMethods.validateAge(student.getBirthday());
+        student.setName(UtilityMethods.uppercaseFirstChar(student.getName()));
         return studentMapper.mapToDTO(studentRepository.save(studentMapper.mapToPersistable(student)));
     }
 
@@ -66,8 +67,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public StudentDTO findById(long id) {
-        System.out.println("FOUND COURSE IS: " + studentRepository.findById(id).get().getCourses().stream().findFirst().get().getName());
-        return studentMapper.mapToDTO(studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Constants.STUDENT_NOT_FOUND)));
+        return studentMapper.mapToDTO(studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessages.STUDENT_NOT_FOUND)));
     }
 
     /**
@@ -77,7 +77,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public void deleteById(long id) {
         if (!studentRepository.existsById(id)) {
-            throw new EntityNotFoundException(Constants.STUDENT_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.STUDENT_NOT_FOUND);
         }
         studentRepository.deleteById(id);
     }
@@ -90,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
         }
         else
         if (!studentRepository.existsById(student.getId())) {
-            throw new EntityNotFoundException(Constants.STUDENT_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.STUDENT_NOT_FOUND);
         }
         return studentMapper.mapToDTO(studentRepository.save(studentMapper.mapToPersistable(student)));
     }
@@ -105,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
         if (!courseService.checkVacancyStatus(foundCourse.getId())) {
             throw new StudentNumberForOneCourseExceededException("No vacancy.");
         }
-        Student foundStudent = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException(Constants.STUDENT_NOT_FOUND));
+        Student foundStudent = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
         foundCourse.addStudents(foundStudent);
         courseService.update(foundCourse);
         return studentMapper.mapToDTO(foundStudent);

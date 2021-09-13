@@ -2,11 +2,7 @@ package dev.schoolmanagement.entity;
 
 import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import java.time.Instant;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -14,12 +10,12 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryUpdateLog extends BaseLog{
+@AttributeOverride(name = "createdDate", column = @Column(name = "request_time"))
+public class SalaryUpdateLog extends AbstractLog {
     private Long instructorId;
     private Double salaryBeforeUpdate;
     private Double salaryAfterUpdate;
     private Float rate;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "salaryUpdateLog")
+    @Embedded
     private ClientInfo clientInfo;
-    private Instant requestTime;
 }

@@ -1,8 +1,8 @@
 package dev.schoolmanagement.configuration;
 
 import dev.schoolmanagement.entity.ClientInfo;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,24 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ClientInfoInterceptor implements HandlerInterceptor, WebMvcConfigurer {
     @Autowired
-    private ClientInfo clientInfo;
+    private final ClientInfo clientInfo;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        clientInfo.setClientIp(request.getRemoteHost());
-        clientInfo.setClientSessionId(request.getRequestedSessionId());
+        // Get address, url and session info from request object
+        clientInfo.setClientIp(request.getRemoteAddr());
+        clientInfo.setClientSessionId(request.getSession().getId());
         clientInfo.setClientURL(request.getRequestURI());
         return true;
     }
-    @Bean
-    ClientInfo clientRequestDTO(){
-        return new ClientInfo();
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this).addPathPatterns("/**");

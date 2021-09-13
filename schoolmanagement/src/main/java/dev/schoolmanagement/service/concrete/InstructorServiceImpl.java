@@ -12,14 +12,12 @@ import dev.schoolmanagement.mappers.InstructorMapper;
 import dev.schoolmanagement.repository.InstructorRepository;
 import dev.schoolmanagement.service.InstructorService;
 import dev.schoolmanagement.service.SalaryUpdateLogService;
-import dev.schoolmanagement.utility.Constants;
+import dev.schoolmanagement.utility.ErrorMessages;
+import dev.schoolmanagement.utility.UtilityMethods;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,8 +47,9 @@ public class InstructorServiceImpl implements InstructorService {
             throw new NonNullableException("Instructor cannot be null");
         }
         else if (instructorRepository.existsByPhoneNumber(instructorDTO.getPhoneNumber())) {
-            throw new InstructorAlreadyExistsException(Constants.INSTRUCTOR_ALREADY_EXISTS);
+            throw new InstructorAlreadyExistsException(ErrorMessages.INSTRUCTOR_ALREADY_EXISTS);
         }
+        instructorDTO.setName(UtilityMethods.uppercaseFirstChar(instructorDTO.getName()));
         if (instructorDTO instanceof VisitingResearcherDTO) {
             return instructorMapper.mapToDTO(instructorRepository.save(instructorMapper.mapToVisitingResearcher((VisitingResearcherDTO) instructorDTO)));
         }
@@ -76,7 +75,7 @@ public class InstructorServiceImpl implements InstructorService {
      */
     @Override
     public InstructorDTO findById(long id) {
-        Instructor instructor = instructorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Constants.INSTRUCTOR_NOT_FOUND));
+        Instructor instructor = instructorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessages.INSTRUCTOR_NOT_FOUND));
         return instructor instanceof PermanentInstructor ?
                 instructorMapper.mapToDTO((PermanentInstructor) instructor) :
                 instructorMapper.mapToDTO((VisitingResearcher) instructor);
@@ -89,7 +88,7 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     public void deleteById(long id) {
         if (!instructorRepository.existsById(id)) {
-            throw new EntityNotFoundException(Constants.INSTRUCTOR_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.INSTRUCTOR_NOT_FOUND);
         }
         instructorRepository.deleteById(id);
     }
@@ -104,8 +103,9 @@ public class InstructorServiceImpl implements InstructorService {
             throw new NonNullableException("Instructor cannot be null");
         }
         else if (!instructorRepository.existsById(instructor.getId())) {
-            throw new EntityNotFoundException(Constants.INSTRUCTOR_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.INSTRUCTOR_NOT_FOUND);
         }
+        instructor.setName(UtilityMethods.uppercaseFirstChar(instructor.getName()));
         if (instructor instanceof PermanentInstructorDTO) {
             return instructorMapper.mapToDTO(instructorRepository.save(instructorMapper.mapToPermanentInstructor((PermanentInstructorDTO) instructor)));
         }
@@ -117,35 +117,36 @@ public class InstructorServiceImpl implements InstructorService {
         Instructor instructor = instructorRepository.findById(id).get();
         double newSalary = 0;
         double currentSalary = 0;
+        double diff = 0;
         if(instructor instanceof VisitingResearcher){
             currentSalary = ((VisitingResearcher) instructor).getHourlySalary();
+            diff = currentSalary*(instructorSalaryUpdate.getRate()/100);
 
             if(instructorSalaryUpdate.getUpdateType()== InstructorSalaryUpdate.UpdateType.RAISE){
-                newSalary = currentSalary+(currentSalary/instructorSalaryUpdate.getRate());
+                newSalary = currentSalary+diff;
             }
             else {
-                newSalary = currentSalary-(currentSalary/instructorSalaryUpdate.getRate());
+                newSalary = currentSalary-diff;
             }
             ((VisitingResearcher) instructor).setHourlySalary((float) newSalary);
         }
         else if (instructor instanceof PermanentInstructor){
             currentSalary = ((PermanentInstructor) instructor).getFixedSalary();
+            diff = currentSalary*(instructorSalaryUpdate.getRate()/100);
             if(instructorSalaryUpdate.getUpdateType()== InstructorSalaryUpdate.UpdateType.RAISE){
-                newSalary = currentSalary+(currentSalary/instructorSalaryUpdate.getRate());
+                newSalary = currentSalary+diff;
             }
             else {
-                newSalary = currentSalary-(currentSalary/instructorSalaryUpdate.getRate());
+                newSalary = currentSalary-diff;
             }
             ((PermanentInstructor) instructor).setFixedSalary((float) newSalary);
         }
 
-        // Log id is not persisted, FIX THIS!
         SalaryUpdateLog salaryUpdateLog = new SalaryUpdateLog();
         salaryUpdateLog.setInstructorId(instructor.getId());
         salaryUpdateLog.setRate((float) instructorSalaryUpdate.getRate());
         salaryUpdateLog.setSalaryBeforeUpdate(currentSalary);
         salaryUpdateLog.setSalaryAfterUpdate(newSalary);
-        salaryUpdateLog.setRequestTime(Instant.now());
         salaryUpdateLog.setClientInfo(clientInfo);
         salaryUpdateLogService.save(salaryUpdateLog);
         return instructor;

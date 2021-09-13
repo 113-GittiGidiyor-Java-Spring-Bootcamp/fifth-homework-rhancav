@@ -19,10 +19,8 @@ public class Course extends AbstractEntity {
     private String courseCode;
     private float creditScore;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonIgnore
     private Instructor instructor;
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
     @ToString.Exclude
     private Set<Student> students = new HashSet<>();
 }

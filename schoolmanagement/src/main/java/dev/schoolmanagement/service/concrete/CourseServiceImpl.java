@@ -7,9 +7,8 @@ import dev.schoolmanagement.exceptions.NonNullableException;
 import dev.schoolmanagement.mappers.CourseMapper;
 import dev.schoolmanagement.repository.CourseRepository;
 import dev.schoolmanagement.service.CourseService;
-import dev.schoolmanagement.utility.Constants;
+import dev.schoolmanagement.utility.ErrorMessages;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +42,7 @@ public class CourseServiceImpl implements CourseService {
             throw new NonNullableException("Course cannot be null.");
         }
         else if (courseRepository.existsByCourseCode(course.getCourseCode()) ||courseRepository.existsById(course.getId())) {
-            throw new CourseAlreadyExistsException(Constants.COURSE_ALREADY_EXISTS);
+            throw new CourseAlreadyExistsException(ErrorMessages.COURSE_ALREADY_EXISTS);
         }
         return courseMapper.mapToDTO(courseRepository.save(courseMapper.mapToEntity(course)));
     }
@@ -61,7 +60,7 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public CourseDTO findById(long id) {
-        return courseMapper.mapToDTO(courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Constants.COURSE_NOT_FOUND)));
+        return courseMapper.mapToDTO(courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessages.COURSE_NOT_FOUND)));
     }
 
     /**
@@ -71,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void deleteById(long id) {
         if (!courseRepository.existsById(id)) {
-            throw new EntityNotFoundException(Constants.COURSE_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.COURSE_NOT_FOUND);
         }
         courseRepository.deleteById(id);
     }
@@ -86,7 +85,7 @@ public class CourseServiceImpl implements CourseService {
             throw new NonNullableException("Course cannot be null");
         }
         else if (!courseRepository.existsById(course.getId())) {
-            throw new EntityNotFoundException(Constants.COURSE_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorMessages.COURSE_NOT_FOUND);
         }
         return courseMapper.mapToDTO(courseRepository.save(courseMapper.mapToEntity(course)));
     }

@@ -6,21 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.context.annotation.SessionScope;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.Embeddable;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SessionScope
-public class ClientInfo extends AbstractEntity{
+@Embeddable
+public class ClientInfo {
     private String clientIp;
     private String clientURL;
     private String clientSessionId;
-    @OneToOne(fetch = FetchType.LAZY)
-    private SalaryUpdateLog salaryUpdateLog;
 }
