@@ -6,8 +6,10 @@ import dev.schoolmanagement.DTO.response.DeletionSuccess;
 import dev.schoolmanagement.DTO.response.UpdateSuccess;
 import dev.schoolmanagement.entity.Gender;
 import dev.schoolmanagement.exceptions.EntityNotFoundException;
+import dev.schoolmanagement.exceptions.StudentAgeNotValidException;
 import dev.schoolmanagement.exceptions.StudentAlreadyExistsException;
 import dev.schoolmanagement.service.StudentService;
+import dev.schoolmanagement.utility.UtilityMethods;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,15 @@ class StudentControllerTest {
         mockStudent.setBirthday(LocalDate.now());
         mockStudent.setAddress("Sarıyer");
         mockStudentList.add(mockStudent);
+    }
+    @Test
+    void Should_Throw_Age_Not_Valid_Exception(){
+        when(studentService.save(any())).thenThrow(StudentAgeNotValidException.class);
+        mockStudent.setBirthday(LocalDate.of(2009,12,12));
+        assertThrows(StudentAgeNotValidException.class, ()->{
+            studentController.save(mockStudent);
+        });
+
     }
 
     @AfterEach

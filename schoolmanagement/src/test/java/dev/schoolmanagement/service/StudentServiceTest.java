@@ -4,6 +4,7 @@ import dev.schoolmanagement.DTO.InstructorDTO;
 import dev.schoolmanagement.DTO.StudentDTO;
 import dev.schoolmanagement.entity.Gender;
 import dev.schoolmanagement.entity.Student;
+import dev.schoolmanagement.exceptions.StudentAgeNotValidException;
 import dev.schoolmanagement.mappers.CourseMapper;
 import dev.schoolmanagement.mappers.CourseMapperImpl;
 import dev.schoolmanagement.mappers.StudentMapper;
@@ -12,6 +13,7 @@ import dev.schoolmanagement.repository.CourseRepository;
 import dev.schoolmanagement.repository.StudentRepository;
 import dev.schoolmanagement.service.concrete.CourseServiceImpl;
 import dev.schoolmanagement.service.concrete.StudentServiceImpl;
+import dev.schoolmanagement.utility.UtilityMethods;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,6 +119,14 @@ class StudentServiceTest {
         assertDoesNotThrow(() -> {
             studentRepository.deleteById(1L);
         });
+    }
+    @Test
+    void Should_Throw_Age_Not_Valid_Exception(){
+      mockStudent.setBirthday(LocalDate.of(2009,12,12));
+        assertThrows(StudentAgeNotValidException.class, ()->{
+            UtilityMethods.validateAge(mockStudent.getBirthday());
+        });
+
     }
 
     @Test

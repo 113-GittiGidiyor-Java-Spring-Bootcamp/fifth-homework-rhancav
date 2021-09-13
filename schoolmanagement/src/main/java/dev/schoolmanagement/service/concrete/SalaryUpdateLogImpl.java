@@ -36,6 +36,9 @@ public class SalaryUpdateLogImpl implements SalaryUpdateLogService {
     }
 
     @Override
+    /**
+     * {@inheritDoc}
+     */
     public SalaryUpdateLog findByInstructorAndDate(Long instructorId, LocalDate createdDate) {
         if (instructorId == null || createdDate == null){
             throw new NonNullableException("Instructor ID and creation date cannot be null.");
