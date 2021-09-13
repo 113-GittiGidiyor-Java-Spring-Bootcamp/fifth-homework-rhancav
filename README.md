@@ -11,8 +11,8 @@ CRUD operations, global error handling, validation.
 Can be simply run with [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-maven-plugin.html) like so:
 
 ```shell
-$ git clone https://github.com/113-GittiGidiyor-Java-Spring-Bootcamp/fourth-homework-erhancavar
-$ cd fourth-homework-erhancavar
+$ git clone https://github.com/113-GittiGidiyor-Java-Spring-Bootcamp/fifth-homework-rhancav
+$ cd fifth-homework-erhancavar
 $ mvn spring-boot:run
 ```
 
