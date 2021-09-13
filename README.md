@@ -16,6 +16,7 @@ $ cd fourth-homework-erhancavar
 $ mvn spring-boot:run
 ```
 
+
 # Details
 The main data model is as shown below:
 [![model-diagram](data-model.png)]
@@ -29,8 +30,10 @@ persisted to database with their creation date, type and message.
 ## Validaton
 Fields are validated through DTO couples of base entity classes which are located under DTO package.
 Validation errors are also handeled by the global exception handler class.
+## Tests
+Tests are available under /test package. For now, only the controller and service layers are covered. To be increased in coverage soon.
 
-JAVADOCS are available for further understanding.
+For further understanding please refer to JAVADOCS.
 
 # Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
