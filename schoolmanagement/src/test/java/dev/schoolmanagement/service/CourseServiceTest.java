@@ -67,6 +67,11 @@ class CourseServiceTest {
     }
 
     @Test
+    void Should_Throw_Already_Exists_Exception(){
+
+    }
+
+    @Test
     void  Should_Return_Persisted_Objects_DTO(){
         // Given
         when(courseRepository.save(any())).thenReturn(mockCourse);

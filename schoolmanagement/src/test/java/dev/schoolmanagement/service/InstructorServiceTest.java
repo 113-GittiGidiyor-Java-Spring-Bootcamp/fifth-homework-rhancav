@@ -2,11 +2,14 @@ package dev.schoolmanagement.service;
 
 import dev.schoolmanagement.DTO.InstructorDTO;
 import dev.schoolmanagement.DTO.VisitingResearcherDTO;
+import dev.schoolmanagement.DTO.request.InstructorSalaryUpdate;
 import dev.schoolmanagement.entity.ClientInfo;
 import dev.schoolmanagement.entity.Instructor;
+import dev.schoolmanagement.entity.VisitingResearcher;
 import dev.schoolmanagement.mappers.InstructorMapper;
 import dev.schoolmanagement.mappers.InstructorMapperImpl;
 import dev.schoolmanagement.repository.InstructorRepository;
+import dev.schoolmanagement.repository.SalaryUpdateLogRepository;
 import dev.schoolmanagement.service.concrete.InstructorServiceImpl;
 import dev.schoolmanagement.service.concrete.SalaryUpdateLogImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -35,6 +38,8 @@ class InstructorServiceTest {
     private InstructorRepository instructorRepository;
     @Mock
     private InstructorMapper instructorMapper;
+    @Mock
+    SalaryUpdateLogRepository salaryUpdateLogRepository;
     private InstructorDTO mockInstructorDTO;
     private List<InstructorDTO> mockInstructorDTOList;
     private Instructor mockInstructor;
@@ -44,7 +49,7 @@ class InstructorServiceTest {
     void setUp() {
         instructorMapper = new InstructorMapperImpl();
 
-        instructorService = new InstructorServiceImpl(instructorRepository, instructorMapper, new ClientInfo(), new SalaryUpdateLogImpl());
+        instructorService = new InstructorServiceImpl(instructorRepository, instructorMapper, new ClientInfo(), new SalaryUpdateLogImpl(salaryUpdateLogRepository));
         mockInstructorDTO = new VisitingResearcherDTO();
         mockInstructorDTOList = new ArrayList<>();
         mockInstructorDTO.setId(1L);
@@ -80,6 +85,19 @@ class InstructorServiceTest {
             );
 
         }
+        @Test
+        void Should_Return_Updated_Result(){
+        // Given
+        VisitingResearcher visitingResearcherDTO = new VisitingResearcher();
+        visitingResearcherDTO.setHourlySalary(120);
+        when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(visitingResearcherDTO));
+        InstructorSalaryUpdate instructorSalaryUpdate = new InstructorSalaryUpdate(InstructorSalaryUpdate.UpdateType.RAISE, 20);
+        // When
+        VisitingResearcher instructor = (VisitingResearcher) instructorService.updateSalary(1L, instructorSalaryUpdate);
+        // Then
+            assertEquals(visitingResearcherDTO.getHourlySalary(), instructor.getHourlySalary());
+
+    }
 
         @Test
         void Should_Return_List_Of_Instructor_DTOs () {

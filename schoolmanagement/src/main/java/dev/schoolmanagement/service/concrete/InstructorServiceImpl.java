@@ -117,7 +117,7 @@ public class InstructorServiceImpl implements InstructorService {
         Instructor instructor = instructorRepository.findById(id).get();
         double newSalary = 0;
         double currentSalary = 0;
-        double diff = 0;
+        double diff ;
         if(instructor instanceof VisitingResearcher){
             currentSalary = ((VisitingResearcher) instructor).getHourlySalary();
             diff = currentSalary*(instructorSalaryUpdate.getRate()/100);
@@ -151,4 +151,5 @@ public class InstructorServiceImpl implements InstructorService {
         salaryUpdateLogService.save(salaryUpdateLog);
         return instructor;
     }
+
 }
